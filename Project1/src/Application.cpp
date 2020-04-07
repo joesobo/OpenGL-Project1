@@ -5,6 +5,17 @@
 #include <string>
 #include <sstream>
 
+static void GLClearError() {
+	//clear all old errors
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static void GLCheckError() {
+	while (GLenum error = glGetError()) {
+		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+	}
+}
+
 static std::string ParseShader(const std::string& filepath) {
 	std::ifstream stream(filepath);
 
@@ -119,7 +130,9 @@ int main(void)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		GLClearError();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		GLCheckError();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
